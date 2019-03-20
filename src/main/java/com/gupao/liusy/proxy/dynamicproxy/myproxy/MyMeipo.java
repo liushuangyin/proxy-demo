@@ -19,6 +19,7 @@ public class MyMeipo implements MyInvocationHandler{
         return MyProxy.newProxyInstance(new MyClassLoader(),clazz.getInterfaces(),this);
     }
 
+    @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         before();
         Object obj = method.invoke(this.person,args);

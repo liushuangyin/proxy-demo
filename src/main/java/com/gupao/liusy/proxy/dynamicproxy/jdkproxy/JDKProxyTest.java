@@ -1,9 +1,9 @@
 package com.gupao.liusy.proxy.dynamicproxy.jdkproxy;
 
+import com.gupao.liusy.proxy.Girl;
 import com.gupao.liusy.proxy.Person;
 import sun.misc.ProxyGenerator;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 /**
@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
  */
 public class JDKProxyTest {
     public static void main(String[] args) {
-        Person person = (Person) new JDKMeipo().getInstance(new Girl());
+        Person person = (Person) new JDKMeipo().getInstance((Person) new Girl());
         person.findLove();
         byte[] bytes = ProxyGenerator.generateProxyClass("$proxy0",new Class[]{Person.class});
         FileOutputStream os = null;
