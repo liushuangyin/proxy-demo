@@ -28,5 +28,6 @@ public class DynamicDataSourceEntity {
 
     public static void restore(){
         local.set(DEFAULT_DATASOURCE);
+        System.out.println("数据源还原为默认");
     }
 }

@@ -15,6 +15,7 @@ public class OrderServiceImpl implements OrderService {
         orderDao = new OrderDao();
     }
 
+    @Override
     public int createOrder(OrderInfo order) {
         System.out.println("OrderServiceimpl 调用orderDao创建订单");
         return orderDao.insert(order);

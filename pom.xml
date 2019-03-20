@@ -7,6 +7,14 @@
     <groupId>com.guopao</groupId>
     <artifactId>proxy-demo</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <dependencies>
+        <!-- spring framework start -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>2.2</version>
+        </dependency>
+    </dependencies>
 
 
 </project>

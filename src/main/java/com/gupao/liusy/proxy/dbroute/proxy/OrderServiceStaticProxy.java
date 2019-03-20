@@ -20,12 +20,12 @@ public class OrderServiceStaticProxy implements OrderService {
     public OrderServiceStaticProxy(OrderService orderService){
         this.orderService = orderService;
     }
+    @Override
     public int createOrder(OrderInfo orderInfo) {
         long time = orderInfo.getCreateTime();
         Integer dbRoute = Integer.valueOf(simpleDateFormat.format(new Date(time)));
         System.out.println("静态代理类自动分配到【DB_"+dbRoute+"】数据源");
         DynamicDataSourceEntity.set(dbRoute);
-        this.orderService.createOrder(orderInfo);
-        return 0;
+        return this.orderService.createOrder(orderInfo);
     }
 }

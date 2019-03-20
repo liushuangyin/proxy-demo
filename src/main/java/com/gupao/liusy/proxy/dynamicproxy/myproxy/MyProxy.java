@@ -4,7 +4,6 @@ import javax.tools.JavaCompiler;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -72,13 +71,61 @@ public class MyProxy {
         sb.append("public $Proxy0(MyInvocationHandler h){this.h = h;}").append(ln);
         for (Class clazz : interfaces) {
             for (Method m : clazz.getMethods()) {
-                sb.append("public ").append(m.getReturnType().getName()).append(" ").append(m.getName()).append("(){").append(ln);
+                String returnStr = "";
+                if(!m.getReturnType().getName().equals("void")){
+                    returnStr = "return ("+m.getReturnType()+") ";
+                }
+                sb.append("public ").append(m.getReturnType().getName()).append(" ").append(m.getName()).append("(" );
+                Class[] paramTypes = m.getParameterTypes();
+                int j = 0;
+                for (Class class2 : paramTypes) {
+                    if (j != 0) {
+                        sb.append(",");
+                    }
+                    sb.append(class2.getName()).append(" var").append(j);
+                    j++;
+                }
+                sb.append("){").append(ln);
                 sb.append("try{").append(ln);
-                sb.append("Method m = ").append(clazz.getName()).append(".class.getMethod(\"").append(m.getName()).append("\",new Class[]{});").append(ln);
-                sb.append("this.h.invoke(this,m,null);").append(ln);
+                //sb.append("Method m = ").append(clazz.getName()).append(".class.getMethod(\"").append(m.getName()).append("\",new Class[]{});").append(ln);
+                sb.append("Method m = ").append(clazz.getName()).append(".class.getMethod(\"").append(m.getName()).append("\",new Class[]{");
+                if(j>0){
+                    int a = 0;
+                    for (Class class2 : paramTypes) {
+                        if (a != 0) {
+                            sb.append(",");
+                        }
+                        sb.append(class2.getName()).append(".class");
+                        a++;
+                    }
+                }
+
+                sb.append("});").append(ln);
+                sb.append(returnStr).append("this.h.invoke(this,m," );
+                if(j>0){
+                    sb.append("new Object[]{");
+                    for (int k = 0;k<j;k++) {
+                        if (k != 0) {
+                            sb.append(",");
+                        }
+                        sb.append("var"+k);
+                    }
+                    sb.append("}");
+                }else{
+                    sb.append("null");
+                }
+                sb.append(");").append(ln);
                 sb.append("}catch(Throwable e){").append(ln);
                 sb.append(" e.printStackTrace();");
                 sb.append("}").append(ln);
+                //非void方法时返回类型处理,这里基本类型只处理了int
+                if(!m.getReturnType().getName().equals("void")) {
+                    if (m.getReturnType().getName().equals("int")) {
+                        sb.append("return 0;").append(ln);
+                    } else {
+                        sb.append("return null;").append(ln);
+                    }
+                }
                 sb.append("}").append(ln);
             }
         }

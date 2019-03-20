@@ -1,5 +1,6 @@
 package com.gupao.liusy.proxy.dbroute;
 
+import com.gupao.liusy.proxy.dbroute.proxy.OrderServiceDynamicProxy;
 import com.gupao.liusy.proxy.dbroute.proxy.OrderServiceStaticProxy;
 
 /**
@@ -15,5 +16,8 @@ public class DbrouteProxyTest {
         OrderService orderService= new OrderServiceImpl();
         OrderServiceStaticProxy proxy = new OrderServiceStaticProxy(orderService);
         proxy.createOrder(orderInfo);
+        OrderService dynamicOrderService = (OrderService) new OrderServiceDynamicProxy().getInstance(new OrderServiceImpl());
+
+        dynamicOrderService.createOrder(orderInfo);
     }
 }
